@@ -10,10 +10,37 @@ runtime:
 build:
   pre_ci_boot:
     image_name: drydock/aarch64_u16
-    image_tag: master
+    image_tag: v6.6.4
     pull: true
     
-  ci:
+  ci:   
+    - java -version
+    - nodejs --version
+    - yarn -version
+    - source /usr/local/rvm/scripts/rvm
+    - ruby -v
     - python -V
-    - docker ps
-    - docker images
+    - pip --version
+    - virtualenv --version
+    - git --version
+    - aws --version #1.15.14
+    - eb --version #3.12.4
+    - az --version #3.0.0
+    - jfrog --version #1.15.1
+    - gcloud version #200.0.0
+    - git lfs version
+    - kubectl version --client #1.10.0
+    - packer --version #1.2.2
+    - jq --version
+    - terraform --version #0.11.7
+    - EXPECTED_DOCKER_VERSION="17.06.0-ce"
+    - |
+      [ $(docker version --format {{.Server.Version}}) == "$EXPECTED_DOCKER_VERSION" ]
+    - docker pull shippabledocker/sample_node_pvt:ecr
+    
+integrations:
+    
+  hub:
+ #Docker integration
+    - integrationName: ship-docker
+      type: dockerRegistryLogin
